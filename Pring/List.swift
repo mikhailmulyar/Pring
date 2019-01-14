@@ -9,7 +9,7 @@
 import FirebaseFirestore
 import FirebaseStorage
 
-public protocol AnyList: class {
+public protocol AnyList: class, StorageLinkable {
 
     var key: String? { get set }
 
@@ -42,12 +42,16 @@ public final class List<T: Document>: AnyList, Collection, ExpressibleByArrayLit
 
     public typealias Index = Int
 
-    public init(arrayLiteral elements: T...) {
+    public init(_ elements: [T]) {
         var storage: [String: T] = [:]
         elements.forEach { (doc) in
             storage[doc.id] = doc
         }
         self._storage = storage
+    }
+
+    public convenience init(arrayLiteral elements: T...) {
+        self.init(elements)
     }
 
     public var parent: Object?
@@ -103,6 +107,30 @@ public final class List<T: Document>: AnyList, Collection, ExpressibleByArrayLit
 
     public var keys: [String] {
         return self._storage.keys.map { $0 }.sorted()
+    }
+
+    public func shouldUploadFiles(_ id: String) -> Bool {
+        for (_, document) in self.enumerated() {
+            if document.shouldUploadFiles(id) {
+                return true
+            }
+        }
+        return false
+    }
+
+    public func saveFiles(_ id: String, container: UploadContainer? = nil, block: ((Error?) -> Void)?) -> [String: StorageUploadTask] {
+        let uploadContainer: UploadContainer = container ?? UploadContainer()
+        self.forEach { document in
+            document.saveFiles(id, container: uploadContainer, block: nil)
+        }
+        return uploadContainer.tasks
+    }
+
+    public func deleteFiles(_ id: String, container: DeleteContainer? = nil, block: ((Error?) -> Void)? = nil) {
+        let deleteContainer: DeleteContainer = container ?? DeleteContainer()
+        self.forEach { document in
+            document.deleteFiles(id, container: deleteContainer, block: nil)
+        }
     }
 }
 

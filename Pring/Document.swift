@@ -88,6 +88,10 @@ public extension Document where Self: Object {
                     if collection.shouldUploadFiles(id) {
                         return true
                     }
+                case .list(_, _, let list):
+                    if list.shouldUploadFiles(id) {
+                        return true
+                    }
                 case .reference(_, _, let reference):
                     if reference.shouldUploadFiles(id) {
                         return true
