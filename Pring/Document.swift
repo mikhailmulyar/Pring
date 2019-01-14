@@ -171,6 +171,8 @@ public extension Document where Self: Object {
                 }
             case .collection(_, _, let collection):
                 collection.saveFiles(id, container: uploadContainer, block: nil)
+            case .list(_, _, let list):
+                list.saveFiles(id, container: uploadContainer, block: nil)                
             case .reference(_, _, let reference):
                 reference.saveFiles(id, container: uploadContainer, block: nil)
             case .relation(_, _, let relation):
