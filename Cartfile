@@ -1,0 +1,3 @@
+# Firebase
+binary "https://dl.google.com/dl/firebase/ios/carthage/FirebaseFirestoreBinary.json"
+binary "https://dl.google.com/dl/firebase/ios/carthage/FirebaseStorageBinary.json"
