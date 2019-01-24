@@ -6,20 +6,6 @@
 	objectVersion = 48;
 	objects = {
 
-/* Begin PBXAggregateTarget section */
-		EFB92D9B21FA06840030816E /* FatFramework */ = {
-			isa = PBXAggregateTarget;
-			buildConfigurationList = EFB92D9E21FA06850030816E /* Build configuration list for PBXAggregateTarget "FatFramework" */;
-			buildPhases = (
-				EFB92D9F21FA068A0030816E /* ShellScript */,
-			);
-			dependencies = (
-			);
-			name = FatFramework;
-			productName = FatFramework;
-		};
-/* End PBXAggregateTarget section */
-
 /* Begin PBXBuildFile section */
 		12027CB21FF4BDA800912630 /* FileControlViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 12027CB11FF4BDA800912630 /* FileControlViewController.swift */; };
 		120A17901FC58FC3002767F6 /* Batchable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 120A178F1FC58FC3002767F6 /* Batchable.swift */; };
@@ -513,10 +499,6 @@
 						CreatedOnToolsVersion = 9.1;
 						ProvisioningStyle = Manual;
 					};
-					EFB92D9B21FA06840030816E = {
-						CreatedOnToolsVersion = 10.1;
-						ProvisioningStyle = Automatic;
-					};
 				};
 			};
 			buildConfigurationList = 12AF82EE1F8CAEDE00561159 /* Build configuration list for PBXProject "Pring" */;
@@ -535,7 +517,6 @@
 				12AF82F31F8CAEDE00561159 /* Pring */,
 				12AF82FC1F8CAEDE00561159 /* PringTests */,
 				12AF832D1F8CD2F400561159 /* Sample */,
-				EFB92D9B21FA06840030816E /* FatFramework */,
 			);
 		};
 /* End PBXProject section */
@@ -680,23 +661,6 @@
 			shellPath = /bin/sh;
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
-		};
-		EFB92D9F21FA068A0030816E /* ShellScript */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-			);
-			inputPaths = (
-			);
-			outputFileListPaths = (
-			);
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "#!/bin/bash\n\n# Adapted from http://stackoverflow.com/questions/24039470/xcode-6-ios-creating-a-cocoa-touch-framework-architectures-issues/26691080#26691080\n# and https://gist.github.com/cromandini/1a9c4aeab27ca84f5d79\n\n# Create a new aggregate target.\n# For the automatically generated scheme, change its build config to \"release\".\n# Ensure this target's \"product name\" build setting matches the framework's.\n# Add a run script with `source \"${PROJECT_DIR}/path_to_this_script`\n\nUNIVERSAL_OUTPUT_DIR=${BUILD_DIR}/${CONFIGURATION}-universal\nRELEASE_DIR=${PROJECT_DIR}/build\n\n# make sure the output directory exists\nmkdir -p \"${UNIVERSAL_OUTPUT_DIR}\"\n\n# Step 1. Build Device and Simulator versions\nxcodebuild -target \"${PROJECT_NAME}\" ONLY_ACTIVE_ARCH=NO -configuration ${CONFIGURATION} BUILD_DIR=\"${BUILD_DIR}\" BUILD_ROOT=\"${BUILD_ROOT}\" clean build -sdk iphoneos\nxcodebuild -target \"${PROJECT_NAME}\" ONLY_ACTIVE_ARCH=NO -configuration ${CONFIGURATION} BUILD_DIR=\"${BUILD_DIR}\" BUILD_ROOT=\"${BUILD_ROOT}\" clean build -sdk iphonesimulator\n\n# Step 2. Copy the framework structure (from iphoneos build) to the universal folder\ncp -R \"${BUILD_DIR}/${CONFIGURATION}-iphoneos/${PRODUCT_NAME}.framework\" \"${UNIVERSAL_OUTPUT_DIR}/\"\n\n# Step 3. Copy Swift modules from iphonesimulator build (if it exists) to the copied framework directory\nSIMULATOR_SWIFT_MODULES_DIR=\"${BUILD_DIR}/${CONFIGURATION}-iphonesimulator/${PROJECT_NAME}.framework/Modules/${PROJECT_NAME}.swiftmodule/.\"\nif [ -d \"${SIMULATOR_SWIFT_MODULES_DIR}\" ]; then\ncp -R \"${SIMULATOR_SWIFT_MODULES_DIR}\" \"${UNIVERSAL_OUTPUT_DIR}/${PROJECT_NAME}.framework/Modules/${PROJECT_NAME}.swiftmodule\"\nfi\n\n# Step 4. Create universal binary file using lipo and place the combined executable in the copied framework directory\nlipo -create -output \"${UNIVERSAL_OUTPUT_DIR}/${PRODUCT_NAME}.framework/${PRODUCT_NAME}\" \"${BUILD_DIR}/${CONFIGURATION}-iphonesimulator/${PRODUCT_NAME}.framework/${PRODUCT_NAME}\" \"${BUILD_DIR}/${CONFIGURATION}-iphoneos/${PRODUCT_NAME}.framework/${PRODUCT_NAME}\"\n\n# Step 5. Convenience step to copy the framework to the project's directory\ncp -R \"${UNIVERSAL_OUTPUT_DIR}/${PRODUCT_NAME}.framework\" \"${RELEASE_DIR}\"\n\n# Step 6. Convenience step to open the project's directory in Finder\nopen \"${RELEASE_DIR}\"\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 
@@ -1081,22 +1045,6 @@
 			};
 			name = Release;
 		};
-		EFB92D9C21FA06850030816E /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				CODE_SIGN_STYLE = Automatic;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-			};
-			name = Debug;
-		};
-		EFB92D9D21FA06850030816E /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				CODE_SIGN_STYLE = Automatic;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-			};
-			name = Release;
-		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -1132,15 +1080,6 @@
 			buildConfigurations = (
 				12AF83491F8CD2F400561159 /* Debug */,
 				12AF834A1F8CD2F400561159 /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		EFB92D9E21FA06850030816E /* Build configuration list for PBXAggregateTarget "FatFramework" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				EFB92D9C21FA06850030816E /* Debug */,
-				EFB92D9D21FA06850030816E /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
