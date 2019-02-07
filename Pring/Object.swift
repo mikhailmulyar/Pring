@@ -505,6 +505,21 @@ open class Object: NSObject, Document, HasParent {
                         if relation is Batchable {
                             (relation as! Batchable).pack(type, batch: batch)
                         }
+                    case .document(let key, _, let document):
+                        document?._properties.forEach { listKey, value in
+                            if let value = value {
+                                switch DataType(key: listKey, value: value) {
+                                case .list(let listKey, _, let list):
+                                    let listUpdateValue: [String: Any] = list.updateValue
+                                    if !listUpdateValue.isEmpty {
+                                        var documentUpdate = updateValue[key] as? [String: Any] ?? [String: Any]()
+                                        documentUpdate[listKey] = listUpdateValue
+                                        updateValue[key] = documentUpdate
+                                    }
+                                default: break
+                                }
+                            }
+                        }
                     default: break
                     }
                 }
