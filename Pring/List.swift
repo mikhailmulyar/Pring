@@ -35,6 +35,7 @@ public extension AnyList {
 public final class List<T: Document>: AnyList, Collection, ExpressibleByArrayLiteral {
 
     fileprivate var _storage: [String: T] = [:]
+    fileprivate var _deleted: [String: Any] = [:]
 
     public typealias ArrayLiteralElement = T
 
@@ -67,7 +68,8 @@ public final class List<T: Document>: AnyList, Collection, ExpressibleByArrayLit
     }
 
     public var updateValue: [String: Any] {
-        var updateValue: [String: Any] = [:]
+        var updateValue: [String: Any] = _deleted
+        _deleted.removeAll()
         self.forEach { (document) in
             if !document.updateValue.isEmpty {
                 updateValue[document.id] = document.updateValue
@@ -102,6 +104,8 @@ public final class List<T: Document>: AnyList, Collection, ExpressibleByArrayLit
         self._storage.removeValue(forKey: object.id)
         if let parent: Object = self.parent, let key: String = self.key, parent.isSaved {
             parent.updateValue[key] = [object.id: FieldValue.delete()]
+        } else {
+            _deleted[object.id] = FieldValue.delete()
         }
     }
 
