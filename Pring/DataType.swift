@@ -399,7 +399,7 @@ public enum DataType {
 
         if let displayStyle: Mirror.DisplayStyle = mirror.displayStyle {
             let subjectTypeString: String = String(describing: subjectType)
-            if displayStyle == .optional && subjectTypeString.contains("Reference") {
+            if displayStyle == .optional && subjectTypeString.contains("Optional<Reference>") {
                 fatalError("[Pring.DataType] *** error: Invalid DataType. \(subjectType) is Reference. Pring not support optional AnyReference Protocol." )
             }
         }
