@@ -516,6 +516,8 @@ open class Object: NSObject, Document, HasParent {
                                         documentUpdate[listKey] = listUpdateValue
                                         updateValue[key] = documentUpdate
                                     }
+                                case .collection(_, _, let collection):
+                                    collection.pack(type, batch: batch)
                                 default: break
                                 }
                             }
